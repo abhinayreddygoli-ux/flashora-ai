@@ -1,10 +1,16 @@
-import {getAI,error,system} from './_common.js';
+import {askGemini,error,ready} from './_common.js';
 export default async function handler(req,res){
  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
- const ai=getAI();if(!ai)return res.status(503).json({error:'AI is not connected yet. Add OPENAI_API_KEY in Vercel → Settings → Environment Variables, then redeploy.'});
+ if(!ready())return res.status(503).json({error:'AI not connected. Add GEMINI_API_KEY in Vercel Environment Variables and redeploy.'});
  const {kind,text,exam,subject,chapter,difficulty,count}=req.body||{};
  if(!['flashcards','quiz'].includes(kind)||typeof text!=='string'||text.trim().length<40)return res.status(400).json({error:'Paste or upload at least 40 characters of study notes.'});
  const n=Math.min(20,Math.max(3,Number(count)||8));
- const schema=kind==='flashcards'?`Return JSON {"items":[{"front":"one clear active recall question","back":"accurate answer","explanation":"helpful short explanation"}]}. Exactly ${n} distinct questions.`:`Return JSON {"items":[{"question":"specific multiple choice question","options":["answer 1","answer 2","answer 3","answer 4"],"answer":0,"explanation":"why the correct answer is right"}]}. Exactly ${n} distinct MCQs. Only one correct answer per question. answer must be its zero-based index.`;
- try{const r=await ai.chat.completions.create({model:process.env.OPENAI_MODEL||'gpt-4o-mini',response_format:{type:'json_object'},messages:[{role:'system',content:system+' Respond with valid JSON only.'},{role:'user',content:`${schema}\nExam: ${exam||'General'}; Subject: ${subject||'General'}; Chapter: ${chapter||'All'}; Difficulty: ${difficulty||'Medium'}.\nSTUDY NOTES:\n${text.slice(0,35000)}`} ]});const data=JSON.parse(r.choices[0].message.content);if(!Array.isArray(data.items))throw Error('Bad response');res.json({items:data.items});}catch(e){return error(res,e)}
+ const schema=kind==='flashcards'?`Return JSON {"items":[{"front":"one clear active recall question","back":"accurate answer","explanation":"short helpful explanation"}]}. Exactly ${n} distinct questions.`:`Return JSON {"items":[{"question":"specific multiple choice question","options":["option A","option B","option C","option D"],"answer":0,"explanation":"why correct answer is right"}]}. Exactly ${n} distinct MCQs. Only one correct answer. answer is the zero-based option index (0 to 3).`;
+ try {
+  const raw=await askGemini(`${schema}\nExam: ${exam||'General'}; Subject: ${subject||'General'}; Chapter: ${chapter||'All'}; Difficulty: ${difficulty||'Medium'}.\nGenerate questions based on these study notes, avoiding unsupported claims. Output valid JSON only.\nSTUDY NOTES:\n${text.slice(0,35000)}`,true);
+  const data=JSON.parse(raw);if(!Array.isArray(data.items)||!data.items.length)throw new Error('Unexpected response format');
+  if(kind==='quiz')data.items=data.items.filter(x=>Array.isArray(x.options)&&x.options.length===4&&Number.isInteger(x.answer)&&x.answer>=0&&x.answer<=3);
+  if(!data.items.length)throw new Error('No valid questions generated');
+  return res.status(200).json({items:data.items.slice(0,n)});
+ }catch(e){return error(res,e)}
 }

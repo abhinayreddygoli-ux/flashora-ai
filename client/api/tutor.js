@@ -1,2 +1,9 @@
-import {getAI,error,system} from './_common.js';
-export default async function handler(req,res){if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});const ai=getAI();if(!ai)return res.status(503).json({error:'AI is not connected yet. Add OPENAI_API_KEY to Vercel Environment Variables and redeploy.'});const {question,text,history=[]}=req.body||{};if(!question?.trim())return res.status(400).json({error:'Ask a question first.'});try{const h=Array.isArray(history)?history.slice(-6).filter(x=>['user','assistant'].includes(x.role)).map(x=>({role:x.role,content:String(x.content).slice(0,1500)})):[];const r=await ai.chat.completions.create({model:process.env.OPENAI_MODEL||'gpt-4o-mini',messages:[{role:'system',content:system+' Explain in simple steps. Be honest when information is outside the provided notes.'},{role:'system',content:'STUDY NOTES:\n'+String(text||'').slice(0,30000)},...h,{role:'user',content:String(question).slice(0,3000)}]});res.json({answer:r.choices[0].message.content});}catch(e){return error(res,e)}}
+import {askGemini,error,ready} from './_common.js';
+export default async function handler(req,res){
+ if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
+ if(!ready())return res.status(503).json({error:'AI not connected. Add GEMINI_API_KEY in Vercel Environment Variables and redeploy.'});
+ const {question,text,history=[]}=req.body||{};
+ if(typeof question!=='string'||!question.trim())return res.status(400).json({error:'Ask a question first.'});
+ const h=Array.isArray(history)?history.slice(-6).filter(x=>x&&['user','assistant'].includes(x.role)).map(x=>`${x.role}: ${String(x.content).slice(0,1500)}`).join('\n'):'';
+ try {const answer=await askGemini(`Explain clearly and step by step. If the student asks a numerical problem, show formulas, substitution, and units.\nSTUDY NOTES:\n${String(text||'').slice(0,30000)}\nPREVIOUS CHAT:\n${h}\nSTUDENT QUESTION:\n${question.slice(0,3000)}`);return res.status(200).json({answer});}catch(e){return error(res,e)}
+}
