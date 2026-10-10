@@ -25,3 +25,24 @@ footer{background:transparent!important;color:#82798f!important}
 
 /* Flashora aesthetic studio */
 :root{color-scheme:light}body{background:radial-gradient(ellipse 58% 38% at 12% 20%,#edf5ef 0%,transparent 72%),radial-gradient(ellipse 55% 38% at 89% 9%,#eee7fa 0%,transparent 76%),#fbfaf7!important}header{position:sticky;top:0;z-index:20}header,.panel,.feature,.exam,.tutor,.quizcard{box-shadow:0 12px 44px #493b6810!important}.hero{padding-top:88px!important;padding-bottom:65px!important}.hero h1{font-weight:700!important;letter-spacing:-.065em!important}.hero p{font-size:17px!important}.heroactions button:first-child{box-shadow:0 12px 28px #8064b133}.study-preview{max-width:890px;margin:60px auto 0;text-align:left;border:1px solid #e9e4ef;border-radius:27px;background:rgba(255,255,255,.8);box-shadow:0 28px 70px #4e426014;padding:27px 32px;backdrop-filter:blur(14px)}.preview-top{display:flex;justify-content:space-between;gap:10px;font-size:11px;font-weight:800;letter-spacing:1.2px;color:#8a7ca7}.preview-live{background:#e9f5ee;border:1px solid #d9eade;border-radius:99px;padding:7px 13px;color:#52856b;letter-spacing:0}.preview-title{font:600 clamp(21px,3vw,30px) Outfit;margin:18px 0 24px;color:#312c46;letter-spacing:-.6px}.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.preview-grid>div{background:linear-gradient(140deg,#f8f5fd,#f7faf7);border:1px solid #ece8f2;border-radius:18px;padding:22px 18px;display:flex;flex-direction:column;gap:10px}.preview-grid span{font-size:10px;font-weight:800;letter-spacing:1.2px;color:#9583ba}.preview-grid strong{font:600 17px Outfit;color:#3b3450}.preview-grid small{font-size:12px;color:#807b8e}.features{padding-top:50px!important}.feature:hover,.exam:hover{transform:translateY(-4px);transition:transform .2s ease}.upload:hover{background:#f5f0ff}.flashcard{transition:transform .25s ease,box-shadow .25s ease!important}.flashcard:hover{box-shadow:0 22px 60px #4a259020!important}.options button:disabled{opacity:1}.bubble.assistant{background:#f0f4f0}.notice{max-width:820px}@media(max-width:650px){.study-preview{margin-top:42px;padding:20px}.preview-grid{grid-template-columns:1fr}.preview-grid>div{padding:16px}.hero{padding-top:62px!important}}
+/* Flashora Sage Edition: calm botanical palette */
+:root{--sage:#688c73;--sage-dark:#365c45;--sage-soft:#eaf2e8;--sage-cream:#f8faf5;--sage-ink:#223b2c}
+body{background:#f7faf5!important;color:#263d30!important}
+header{background:rgba(248,251,246,.94)!important;border-bottom:1px solid #dce9dd!important;backdrop-filter:blur(14px)}
+.logo,.featureicon{background:#dcecdf!important;color:#315f43!important}
+.brand,.brandai{color:#355b42!important}
+.hero{background:radial-gradient(ellipse at 15% 15%,#e0eee0 0%,transparent 48%),radial-gradient(ellipse at 85% 65%,#e9f3e5 0%,transparent 44%),#f8fbf6!important}
+.hero h1,.center h1,.worktop h1,.features h2{color:#254332!important}
+.hero h1 em{color:#678e71!important}
+button:not(.outline):not(.exam):not(.active):not(.options button),.heroactions>button:first-child{background:#517c5f!important;color:white!important;border-color:#517c5f!important}
+button:hover:not(:disabled){filter:brightness(.97)}
+.pill,.preview-live{background:#e3efe3!important;color:#3f7251!important;border-color:#cbdccc!important}
+.study-preview,.panel,.feature,.exam,.quizcard,.flashcard,.tutor,.empty,.result{background:#fffefa!important;border-color:#d7e5d8!important;box-shadow:0 10px 35px rgba(52,86,57,.055)!important}
+.preview-grid>div{background:#edf5ea!important;border-color:#dce8db!important}
+.preview-grid strong,.feature h3{color:#335b40!important}
+.exam.selected,.tabs .active{border-color:#668e72!important;background:#e8f2e7!important;color:#315b40!important}
+input:focus,textarea:focus,select:focus{outline:2px solid #95b99b!important;border-color:#7ca184!important}
+.flashcard{background:linear-gradient(135deg,#e8f3e8,#fffef8)!important}
+.cardlabel,.fliplabel,.crumb,.subline{color:#4e7a5c!important}
+footer{background:#edf4eb!important;color:#54715b!important;border-color:#d8e5d6!important}
+.notice{background:#e8f3e5!important;color:#386247!important;border-color:#d4e7d4!important}

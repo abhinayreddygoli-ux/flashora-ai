@@ -1,1 +1,2 @@
-export default function handler(req,res){res.status(200).json({aiReady:!!process.env.GEMINI_API_KEY,provider:'Gemini'});}
+import {ready,chooseModel} from './_common.js';
+export default async function handler(req,res){if(req.method!=='GET')return res.status(405).json({error:'Method not allowed'});if(!ready())return res.status(200).json({aiReady:false,provider:'Groq',message:'Set GROQ_API_KEY in Vercel.'});try{const model=await chooseModel();return res.status(200).json({aiReady:true,provider:'Groq',model});}catch(e){return res.status(200).json({aiReady:false,provider:'Groq',message:e.message});}}
