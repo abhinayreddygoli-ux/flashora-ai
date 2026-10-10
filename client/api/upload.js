@@ -1,0 +1,4 @@
+import {createRequire} from 'module';
+const require=createRequire(import.meta.url);const pdfParse=require('pdf-parse');
+export const config={api:{bodyParser:{sizeLimit:'6mb'}}};
+export default async function handler(req,res){if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});try{const {base64,name}=req.body||{};if(typeof base64!=='string'||base64.length>8000000)return res.status(400).json({error:'Choose a text-based PDF under 5 MB.'});const b=Buffer.from(base64,'base64');if(b.subarray(0,4).toString()!=='%PDF')return res.status(400).json({error:'Only PDF files are supported.'});const d=await pdfParse(b);if(!d.text.trim())return res.status(422).json({error:'No selectable text found. Scanned PDFs are not supported yet.'});res.json({text:d.text.trim().slice(0,35000),pages:d.numpages,characters:d.text.length});}catch(e){res.status(400).json({error:'Could not read the PDF. Please try another text-based PDF.'})}}
